@@ -1,0 +1,57 @@
+version: "3"
+services:
+  bitcoind:
+    restart: unless-stopped
+    image: lightningcn/bitcoin:0.17.1-amd64
+    container_name: lightningcn_bitcoind
+    environment:
+      BITCOIN_NETWORK: "${BITCOIN_NETWORK:-testnet}"
+      BITCOIN_EXTRA_ARGS: |
+        server=1
+        disablewallet=1
+        rpcport=43782
+        port=39388
+        whitelist=0.0.0.0/0
+    expose:
+        - "43782"
+        - "39388"
+    volumes:
+        - ./bitcoin_data:/data
+
+  clightning_bitcoin:
+    image: lightningcn/lightning:v0.6.3.1-amd64
+    container_name: lightningcn_clightning_bitcoin
+    restart: unless-stopped
+    environment:
+      LND_ENVIRONMENT: ${BITCOIN_NETWORK:-testnet}
+      LIGHTNINGD_CHAIN: btc
+      LIGHTNINGD_OPT: |
+        bitcoin-datadir=/data
+        bitcoin-rpcconnect=bitcoind
+        announce-addr=${LIGHTNING_HOST}:9735
+        bind-addr=0.0.0.0:9735
+        network=${LIGHTNINGD_NETWORK:-testnet}
+        alias=${LIGHTNING_ALIAS}
+        chain=btc
+    volumes:
+        - ./clightning_data:/root/.lightning
+        - ./bitcoin_data:/data
+    ports:
+        - "9735:9735"
+    links:
+      - bitcoind
+
+  spark:
+    restart: unless-stopped
+    image: shesek/spark-wallet:standalone
+    container_name: lightningcn_spark-wallet
+    environment:
+      NETWORK: ${BITCOIN_NETWORK:-testnet}
+      SPARK_OPT: -Q -P --no-tls --public-url http://${LIGHTNING_HOST}:9737
+    ports:
+        - "9737:9737"
+    volumes:
+        - ./spark_data:/data
+        - ./clightning_data:/etc/lightning
+    links:
+      - clightning_bitcoin
