@@ -30,7 +30,7 @@ services:
         bitcoin-rpcconnect=bitcoind
         announce-addr=${LIGHTNING_HOST}:9735
         bind-addr=0.0.0.0:9735
-        network=${LIGHTNINGD_NETWORK:-testnet}
+        network=${LIGHTNING_NETWORK:-testnet}
         alias=${LIGHTNING_ALIAS}
         chain=btc
     volumes:
@@ -38,8 +38,8 @@ services:
         - ./bitcoin_data:/data
     ports:
         - "9735:9735"
-    links:
-      - bitcoind
+    depends_on:
+        - bitcoind
 
   spark:
     restart: unless-stopped
@@ -53,5 +53,5 @@ services:
     volumes:
         - ./spark_data:/data
         - ./clightning_data:/etc/lightning
-    links:
+    depends_on:
       - clightning_bitcoin
