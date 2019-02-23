@@ -50,7 +50,7 @@
 ## 树莓派一键安装 bitcoin + lnd + rtl 闪电网络服务器 
 
    ```
-    bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/setup_lnd.sh)"
+    bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/setup_arm32v7.sh)"
    ```
 
 ## 其他操作系统
