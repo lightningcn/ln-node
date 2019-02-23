@@ -2,11 +2,11 @@
 
 ## 系统需求
 
-   ubuntu linux
+   docker 和 docker-compose
 
 ## 硬件需求
 
-   300G硬盘，内存1G以上
+   x86_64 或者arm32v7系统，比如树莓派, 300G硬盘，内存1G以上
 
 ##  一键安装 bitcoin + clightning + spark 闪电网络节点
 
