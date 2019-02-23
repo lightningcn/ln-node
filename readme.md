@@ -60,3 +60,7 @@
     下载对应的docker-compose.yml文件, 执行docker-compose up
 
     其他支持docker的系统如windows, mac 理论上也可以，没有测试过
+
+## NAT
+
+    如果节点没有公网IP，需要在路由器上配置NAT转换才可以，支持外部访问
