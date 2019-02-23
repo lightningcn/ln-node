@@ -47,6 +47,12 @@
 
     默认登陆密码为lightningcn，可以在docker-compose.yml中修改RTL_PASS, 修改密码后需要重新启动
 
+## 树莓派一键安装 bitcoin + lnd + rtl 闪电网络服务器 
+
+   ```
+    bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/setup_lnd.sh)"
+   ```
+
 ## 其他操作系统
 
     ubuntu 18.04 上测试通过, 其他liunx版本，需要自己安装docker和docker-compose,
@@ -54,8 +60,3 @@
     下载对应的docker-compose.yml文件, 执行docker-compose up
 
     其他支持docker的系统如windows, mac 理论上也可以，没有测试过
-
-## todo
-
-   raspberry 支持
-
