@@ -62,7 +62,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
 fi
 
 # get docker compose yml
-DOCKER_COMPOSE_FILE=https://github.com/lightningcn/ln-node/raw/master/x86_64/docker-compose_bitcoin_clighting_spark.yml
+DOCKER_COMPOSE_FILE=https://github.com/lightningcn/ln-node/raw/master/x86_64/docker-compose_bitcoin_clightning_spark.yml
 curl -L "$DOCKER_COMPOSE_FILE" -o docker-compose.yml
 
 PublicIP=$(curl -s http://v4.ipv6-test.com/api/myip.php)
