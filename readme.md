@@ -11,7 +11,7 @@
 ##  一键安装 bitcoin + clightning + spark 闪电网络节点
 
    ```
-   bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/setup.sh)"
+   sudo bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/setup.sh)"
    ```
 
    终端会出现二维码和一个如下url，表示安装完毕，耐心等待同步完毕
@@ -34,7 +34,7 @@
 ## 一键安装bitcoin + lnd + rtl 闪电网络服务器
 
    ```
-    bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/setup_lnd.sh)"
+    sudo bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/setup_lnd.sh)"
    ```
 
     出现如下结果表示安装完毕，等待同步完成即可 
@@ -50,7 +50,7 @@
 ## 树莓派一键安装 bitcoin + lnd + rtl 闪电网络服务器 
 
    ```
-    bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/setup_arm32v7.sh)"
+    sudo bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/setup_arm32v7.sh)"
    ```
 
 ## 其他操作系统
