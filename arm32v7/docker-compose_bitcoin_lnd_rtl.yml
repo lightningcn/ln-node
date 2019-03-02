@@ -12,7 +12,7 @@ services:
         txindex=1
         server=1
         rpcuser=rpcuser
-        rpcpass=rpcpass
+        rpcpassword=rpcpass
         rpcport=43782
         port=39388
         whitelist=0.0.0.0/0

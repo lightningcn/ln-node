@@ -71,4 +71,4 @@ export BITCOIN_NETWORK=mainnet
 export LIGHTNING_HOST=${PublicIP}
 export LIGHTNING_ALIAS=nodex.lightningcn.com
  
-docker-compose up
+docker-compose up -d
