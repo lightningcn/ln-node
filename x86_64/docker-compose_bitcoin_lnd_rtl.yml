@@ -47,6 +47,7 @@ services:
         alias=${LIGHTNING_ALIAS}
         noseedbackup=1
         notls=1
+        nat=true
     volumes:
         - ./lnd_data:/data
         - ./bitcoin_data:/btcdata
