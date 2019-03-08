@@ -1,0 +1,47 @@
+version: "3"
+services:
+  spruned:
+    restart: unless-stopped
+    image: lightningcn/spruned:arm32v6
+    container_name: lightningcn_spruned
+    commond: spruned --rpcbind 0.0.0.0
+    volumes:
+        - ./spruned_data:/root/.spruned
+    ports:
+        - 8332:8332
+
+  clightning_bitcoin:
+    image: lightningcn/lightning:v0.6.3.1-arm32v6
+    container_name: lightningcn_clightning_bitcoin
+    restart: unless-stopped
+    environment:
+      LND_ENVIRONMENT: ${BITCOIN_NETWORK:-testnet}
+      LIGHTNINGD_CHAIN: btc
+      LIGHTNINGD_OPT: |
+        bitcoin-rpcuser=rpcuser
+        bitcoin-rpcpassword=rpcpassword
+        bitcoin-rpcconnect=${BITCOIN_NODE:-127.0.0.1}:8332
+        announce-addr=${LIGHTNING_HOST}:9735
+        bind-addr=0.0.0.0:9735
+        network=${LIGHTNING_NETWORK:-testnet}
+        alias=${LIGHTNING_ALIAS}
+        chain=btc
+    volumes:
+        - ./clightning_data:/root/.lightning
+    ports:
+        - "9735:9735"
+    depends_on:
+        - spruned
+
+  fulmo:
+    restart: unless-stopped
+    image:  lightningcn/fulmo:arm32v6
+    container_name: lightningcn_fulmo
+    command: "/usr/bin/python fulmo.py"
+    ports:
+        - "5000:5000"
+    volumes:
+        - ./fulmo_data:/data
+        - ./clightning_data:/root/.lightning
+    depends_on:
+      - clightning_bitcoin
