@@ -58,7 +58,7 @@
    download https://github.com/lncm/pi-factory/releases/download/v0.4.1/lncm-box-v0.4.1.img.zip 
 
    ```
-    sudo bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/arm32v6/docker-compose.yml&& docker-compose up)"
+    sudo bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/setup_arm32v6.sh)"
    ```
  
    ![fulmo](image/fulmo.png)
