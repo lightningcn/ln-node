@@ -53,6 +53,17 @@
     sudo bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/setup_arm32v7.sh)"
    ```
 
+## 树莓派zerow 安装 spruned + clightning + fulmo 闪电网络服务器 
+
+   download https://github.com/lncm/pi-factory/releases/download/v0.4.1/lncm-box-v0.4.1.img.zip 
+
+   ```
+    sudo bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/arm32v6/docker-compose.yml&& docker-compose up)"
+   ```
+ 
+   ![fulmo](image/fulmo.png)
+
+
 ## 其他操作系统
 
     ubuntu 18.04 上测试通过, 其他liunx版本，需要自己安装docker和docker-compose,

@@ -1,0 +1,54 @@
+version: "3"
+services:
+  spruned:
+    restart: unless-stopped
+    image: lightningcn/spruned:arm32v6
+    container_name: lightningcn_spruned
+    command: spruned --rpcbind 0.0.0.0 
+    volumes:
+        - ./spruned_data:/root/.spruned
+    ports:
+        - 8332:8332
+
+  clightning:
+    image: lightningcn/lightning:arm32v6
+    container_name: lightningcn_clightning
+    restart: unless-stopped
+    entrypoint: >
+      /bin/bash -c "
+        while ! nc -z spruned 8332;
+        do
+          echo sleeping;
+          sleep 10;
+        done;
+        echo Connected!;
+        export IP=$$(dig +short spruned);
+        export PublicIP=$$(curl -s http://v4.ipv6-test.com/api/myip.php)
+        echo $$IP;
+        lightningd --bitcoin-rpcconnect=$$IP --bitcoin-rpcuser=rpcuser --bitcoin-rpcpassword=rpcpassword --bitcoin-rpcport=8332 --bind-addr=0.0.0.0:9735  --announce-addr=$$PublicIP:9735   --alias=raspzerow.lightningcn.com --network=bitcoin"
+    volumes:
+        - ./clightning_data:/root/.lightning
+    ports:
+        - "9735:9735"
+    links:
+        - spruned
+ 
+  fulmo:
+    restart: unless-stopped
+    image:  lightningcn/fulmo:arm32v6
+    container_name: lightningcn_fulmo
+    entrypoint: >
+      /bin/ash -c "
+        while ! nc -z clightning 9735;
+        do
+          echo sleeping;
+          sleep 10;
+        done;
+        echo Connected!;
+        /usr/bin/python fulmo.py"
+    ports:
+        - "5000:5000"
+    volumes:
+        - ./clightning_data/:/root/.lightning/
+    depends_on:
+      - clightning 
