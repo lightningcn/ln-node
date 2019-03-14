@@ -63,6 +63,12 @@
  
    ![fulmo](image/fulmo.png)
 
+## test btcpay
+
+   ```
+     wget https://raw.github.com/lightningcn/ln-node/master/btcpay/docker-compose.yml
+	 docker-compose up
+   ```
 
 ## 其他操作系统
 
