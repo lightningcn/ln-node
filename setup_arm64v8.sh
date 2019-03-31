@@ -23,7 +23,7 @@ if ! [ -x "$(command -v docker)" ] || ! [ -x "$(command -v docker-compose)" ]; t
             sh get-docker.sh
             rm get-docker.sh
         elif [[ "$(uname -m)" == "aarch64" ]]; then
-            echo "Trying to install docker for armv7 on a aarch64 board..."
+            echo "Trying to install docker for armv8 on a aarch64 board..."
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
             RELEASE=$(lsb_release -cs)
             if [[ "$RELEASE" == "bionic" ]]; then
