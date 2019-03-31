@@ -63,6 +63,13 @@
  
    ![fulmo](image/fulmo.png)
 
+## arm64v8 一键安装 bitcoin + lnd + rtl 闪电网络服务器 
+
+   ```
+    sudo bash -c "$(curl -fsSL https://raw.github.com/lightningcn/ln-node/master/setup_arm64v8.sh)"
+   ```
+ 
+
 ## test btcpay
 
    ```
