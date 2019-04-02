@@ -1,0 +1,113 @@
+version: "3"
+services:
+  bitcoind:
+    restart: unless-stopped
+    image: lightningcn/bitcoin:0.17.1-amd64
+    container_name: lightningcn_bitcoind
+    environment:
+      BITCOIN_NETWORK: "${BITCOIN_NETWORK:-testnet}"
+      BITCOIN_DATA: /data
+      BITCOIN_EXTRA_ARGS: |
+        server=1
+        rpcuser=rpcuser
+        rpcpassword=rpcpass
+        rpcport=43785
+        port=39385
+        whitelist=0.0.0.0/0
+        zmqpubrawblock=tcp://0.0.0.0:38332
+        zmqpubrawtx=tcp://0.0.0.0:38333
+    expose:
+        - "43785"
+        - "39385"
+        - "38332"
+        - "38333"
+    ports:
+        - "127.0.0.1:43785:43785"
+    volumes:
+        - ./bitcoin_data:/data
+
+  lnd_bitcoin:
+    image: lightningcn/lnd:v0.5.2-beta-amd64
+    container_name: lightningcn_lnd_bitcoin
+    restart: unless-stopped
+    environment:
+      LND_CHAIN: "btc"
+      LND_ENVIRONMENT: ${BITCOIN_NETWORK:-testnet}
+      LND_DATA: /data
+      LND_BITCOIND: /btcdata
+      LND_EXTRA_ARGS: |
+        restlisten=0.0.0.0:8080
+        rpclisten=127.0.0.1:10008
+        rpclisten=0.0.0.0:10009
+        bitcoin.node=bitcoind
+        bitcoind.rpchost=bitcoind:43785
+        bitcoind.zmqpubrawblock=tcp://bitcoind:38332
+        bitcoind.zmqpubrawtx=tcp://bitcoind:38333
+        externalip=${LIGHTNING_HOST}:9745
+        tlsextraip=${LIGHTNING_HOST}
+        #tlsextradomain={LIGHTNING_ALIAS}
+        alias=${LIGHTNING_ALIAS}
+        noseedbackup=1
+        notls=1
+    volumes:
+        - ./lnd_data:/data
+        - ./bitcoin_data:/btcdata
+    ports:
+        - "127.0.0.1:10009:10009"
+        - "9735:9735"
+    expose:
+        - "10009"
+        - "8080"
+        - "9735"
+    depends_on:
+        - bitcoind
+
+  redis:
+    restart: unless-stopped
+    image: redis:latest
+    container_name: lightningcn_redis
+    command: redis-server --appendonly yes --requirepass password
+    ports:
+        - "127.0.0.1:6379:6379"
+    expose:
+        - "6379"
+    volumes:
+        - ./redis_data:/data
+
+  lndhub:
+    restart: unless-stopped
+    image: lightningcn/lndhub:latest
+    container_name: lightningcn_lndhub
+    entrypoint: >
+      /bin/ash -c "
+        while ! nc -z 127.0.0.1 10009;
+        do
+          echo sleeping;
+          sleep 10;
+        done;
+        echo Connected!;
+        cp /data/lnd_data/tls.cert /data/tls.cert
+        cp /data/lnd_data/data/chain/bitcoin/regtest/admin.macaroon /data/admin.macaroon
+        node build/index.js" 
+    environment:
+      CONFIG: '{"bitcoind": {
+                     "rpc": "http://rpcuser:rpcpass@127.0.0.1:43785"
+                   },
+                   "redis": {
+                     "port": 6379,
+                     "host": "127.0.0.1",
+                     "family": 4,
+                     "password": "password",
+                     "db": 0
+                   },
+                   "lnd": {
+                     "url": "127.0.0.1:10009",
+                     "password": ""
+                   }
+                 } 
+              '
+    ports:
+        - "3000:3000"
+    volumes:
+        - ./lnd_data:/data/lnd_data
+    network_mode: host
