@@ -27,7 +27,7 @@ services:
         - ./bitcoin_data:/data
  
   lnd_bitcoin:
-    image: lightningcn/lnd:v0.5.2-beta-arm64v8
+    image: lightningcn/lnd:v0.6-beta-arm64v8
     container_name: lightningcn_lnd_bitcoin
     restart: unless-stopped
     environment:
@@ -41,12 +41,13 @@ services:
         rpclisten=0.0.0.0:10009
         bitcoin.node=bitcoind
         bitcoind.rpchost=bitcoind:43782
+        bitcoind.rpcuser=rpcuser
+        bitcoind.rpcpass=rpcpass
         bitcoind.zmqpubrawblock=tcp://bitcoind:28332
         bitcoind.zmqpubrawtx=tcp://bitcoind:28333
         externalip=${LIGHTNING_HOST}:9735
         alias=${LIGHTNING_ALIAS}
         noseedbackup=1
-        notls=1
         nat=false
     volumes:
         - ./lnd_data:/data
@@ -66,7 +67,7 @@ services:
     image: lightningcn/rtl:arm64v8
     container_name: lightningcn_rtl-wallet
     environment:
-      LND_SERVER_URL: http://lnd_bitcoin:8080/v1
+      LND_SERVER_URL: https://lnd_bitcoin:8080/v1
       MACAROON_PATH: "/root/.lnd/data/chain/bitcoin/${BITCOIN_NETWORK:-testnet}"
       LND_CONFIG_PATH: /root/.lnd/lnd.conf
       BITCOIND_CONFIG_PATH: /root/.bitcoin/bitcoin.conf

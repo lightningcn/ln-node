@@ -41,6 +41,8 @@ services:
         rpclisten=0.0.0.0:10009
         bitcoin.node=bitcoind
         bitcoind.rpchost=bitcoind:43785
+        bitcoind.rpcuser=rpcuser
+        bitcoind.rpcpass=rpcpass
         bitcoind.zmqpubrawblock=tcp://bitcoind:38332
         bitcoind.zmqpubrawtx=tcp://bitcoind:38333
         externalip=${LIGHTNING_HOST}:9745
